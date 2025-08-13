@@ -2,6 +2,12 @@
 <Configuration status="DEBUG" xmlns="https://logging.apache.org/xml/ns"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-config-2.xsd">
+    <Properties>
+        <Property name="log4j2.basePath" value="${sys:app.log4j2.basePath:-}" />
+        <Property name="log4j2.fileName" value="${sys:app.log4j2.fileName:-default}.json" />
+        <Property name="log4j2.filePattern"
+            value="${sys:app.log4j2.filePattern:-default}-%d{yyyy-MM-dd}-%i.json" />
+    </Properties>
     <Appenders>
         <RollingFile name="RollingFile" fileName="logs/app.log"
             filePattern="logs/app-%d{yyyy-MM-dd}-%i.log.gz">
@@ -17,11 +23,47 @@
                 <TimeBasedTriggeringPolicy />
             </Policies>
         </RollingFile>
+        <RollingFile name="ConfiguredRollingFile"
+            fileName="${log4j2.basePath:-.}/${log4j2.fileName}"
+            filePattern="${log4j2.basePath:-.}/${log4j2.filePattern}">
+            <Filters>
+                <ScriptFilter onMatch="ACCEPT" onMismatch="DENY">
+                    <Script name="script" language="javascript" scriptText="${log4j2.basePath}" />
+                </ScriptFilter>
+            </Filters>
+            <JsonTemplateLayout locationInfoEnabled="true"
+                eventTemplate="{ &quot;timestamp&quot;: { &quot;$resolver&quot;: &quot;timestamp&quot; },
+            &quot;ecs.version&quot;: &quot;1.2.0&quot;, &quot;log.level&quot;: {
+            &quot;$resolver&quot;: &quot;level&quot;, &quot;field&quot;: &quot;name&quot; },
+            &quot;message&quot;: { &quot;$resolver&quot;: &quot;message&quot;,
+            &quot;stringified&quot;: true }, &quot;process.thread.name&quot;: {
+            &quot;$resolver&quot;: &quot;thread&quot;, &quot;field&quot;: &quot;name&quot; },
+            &quot;log.logger&quot;: { &quot;$resolver&quot;: &quot;logger&quot;, &quot;field&quot;:
+            &quot;name&quot; }, &quot;labels&quot;: { &quot;$resolver&quot;: &quot;mdc&quot;,
+            &quot;flatten&quot;: true, &quot;stringified&quot;: true }, &quot;tags&quot;: {
+            &quot;$resolver&quot;: &quot;ndc&quot; }, &quot;error.type&quot;: {
+            &quot;$resolver&quot;: &quot;exception&quot;, &quot;field&quot;: &quot;className&quot;
+            }, &quot;error.message&quot;: { &quot;$resolver&quot;: &quot;exception&quot;,
+            &quot;field&quot;: &quot;message&quot; }, &quot;error.stack_trace&quot;: {
+            &quot;$resolver&quot;: &quot;exception&quot;, &quot;field&quot;: &quot;stackTrace&quot;,
+            &quot;stackTrace&quot;: { &quot;stringified&quot;: true } }}" />
+            <DefaultRolloverStrategy>
+                <Delete basePath="${log4j2.basePath}">
+                    <IfFileName regex="${log4j2.fileName}-\d{4}-\d{2}-\d{2}\-\d+.log\.json" />
+                    <IfLastModified age="P3D" />
+                </Delete>
+            </DefaultRolloverStrategy>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>
     </Appenders>
 
     <Loggers>
         <Root level="INFO">
             <AppenderRef ref="RollingFile" />
+            <AppenderRef ref="ConfiguredRollingFile" />
         </Root>
     </Loggers>
 </Configuration>

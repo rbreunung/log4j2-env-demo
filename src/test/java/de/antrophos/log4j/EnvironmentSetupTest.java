@@ -13,7 +13,8 @@ public class EnvironmentSetupTest {
     @Test
     public void helloWorldTest() {
 
-        logger.info("Hello World!");
+        logger.info("Hello World 1!");
+        logger.info("Hello World 2!");
     }
 
     @Test
