@@ -6,12 +6,12 @@
         <RollingFile name="RollingFile" fileName="logs/app.log"
             filePattern="logs/app-%d{yyyy-MM-dd}-%i.log.gz">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
-            <DirectWriteRolloverStrategy>
+            <DefaultRolloverStrategy>
                 <Delete basePath="logs">
                     <IfFileName regex="app-\d{4}-\d{2}-\d{2}\-\d+.log\.gz" />
                     <IfLastModified age="P3D" />
                 </Delete>
-            </DirectWriteRolloverStrategy>
+            </DefaultRolloverStrategy>
             <Policies>
                 <OnStartupTriggeringPolicy />
                 <TimeBasedTriggeringPolicy />

@@ -5,11 +5,18 @@
     <groupId>de.antrophos.log4j</groupId>
     <artifactId>log4j-envvar-demo</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
     <properties>
         <junit.version>5.13.4</junit.version>
         <log4j.version>2.25.1</log4j.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencyManagement>
@@ -50,4 +57,22 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <environmentVariables>
+                        <foo-env>bar</foo-env>
+                    </environmentVariables>
+                    <systemPropertyVariables>
+                        <foo-sys>bar</foo-sys>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 </project>
