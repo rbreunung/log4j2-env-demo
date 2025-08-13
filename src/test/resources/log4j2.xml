@@ -27,10 +27,12 @@
             fileName="${log4j2.basePath:-.}/${log4j2.fileName}"
             filePattern="${log4j2.basePath:-.}/${log4j2.filePattern}">
             <Filters>
+                <!-- ScriptFilter shall block all events from being written, if no configuration is given -->
                 <ScriptFilter onMatch="ACCEPT" onMismatch="DENY">
                     <Script name="script" language="javascript" scriptText="${log4j2.basePath}" />
                 </ScriptFilter>
             </Filters>
+            <!-- JsonTemplateLayout is more expressive for an event collector application. -->
             <JsonTemplateLayout locationInfoEnabled="true"
                 eventTemplate="{ &quot;timestamp&quot;: { &quot;$resolver&quot;: &quot;timestamp&quot; },
             &quot;ecs.version&quot;: &quot;1.2.0&quot;, &quot;log.level&quot;: {
