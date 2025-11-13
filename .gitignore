@@ -1,5 +1,9 @@
+# binaries
 /target/
+# unit test logs
 /logs/
+/direct/
 /configuredLogs/
+# IDE files
 /.continue/
 /.vscode/
