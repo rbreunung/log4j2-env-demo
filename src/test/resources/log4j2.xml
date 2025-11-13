@@ -73,13 +73,15 @@
             &quot;stringified&quot;: true }, &quot;process.thread.name&quot;: {
             &quot;$resolver&quot;: &quot;thread&quot;, &quot;field&quot;: &quot;name&quot; },
             &quot;log.logger&quot;: { &quot;$resolver&quot;: &quot;logger&quot;, &quot;field&quot;:
-            &quot;name&quot; }, &quot;labels&quot;: { &quot;$resolver&quot;: &quot;mdc&quot;,
-            &quot;flatten&quot;: true, &quot;stringified&quot;: true }, &quot;tags&quot;: {
-            &quot;$resolver&quot;: &quot;ndc&quot; }, &quot;error.type&quot;: {
-            &quot;$resolver&quot;: &quot;exception&quot;, &quot;field&quot;: &quot;className&quot;
-            }, &quot;error.message&quot;: { &quot;$resolver&quot;: &quot;exception&quot;,
-            &quot;field&quot;: &quot;message&quot; }, &quot;error.stack_trace&quot;: {
-            &quot;$resolver&quot;: &quot;exception&quot;, &quot;field&quot;: &quot;stackTrace&quot;,
+            &quot;name&quot; }, &quot;filename&quot;: {&quot;$resolver&quot;: &quot;source&quot;,
+            &quot;field&quot;: &quot;className&quot;}, &quot;line&quot;: {&quot;$resolver&quot;:
+            &quot;source&quot;, &quot;field&quot;: &quot;lineNumber&quot;}, &quot;labels&quot;:
+            {&quot;$resolver&quot;: &quot;mdc&quot;, &quot;flatten&quot;: true,
+            &quot;stringified&quot;: true }, &quot;tags&quot;: {&quot;$resolver&quot;: &quot;ndc&quot; },
+            &quot;error.type&quot;: {&quot;$resolver&quot;: &quot;exception&quot;, &quot;field&quot;:
+            &quot;className&quot;}, &quot;error.message&quot;: { &quot;$resolver&quot;:
+            &quot;exception&quot;, &quot;field&quot;: &quot;message&quot; }, &quot;error.stack_trace&quot;:
+            {&quot;$resolver&quot;: &quot;exception&quot;, &quot;field&quot;: &quot;stackTrace&quot;,
             &quot;stackTrace&quot;: { &quot;stringified&quot;: true } }}" />
             <DefaultRolloverStrategy>
                 <Delete basePath="${log4j2.basePath}">
