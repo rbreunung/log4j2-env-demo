@@ -3,10 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-config-2.xsd">
     <Properties>
-        <Property name="log4j2.basePath" value="${sys:app.log4j2.basePath:-}" />
-        <Property name="log4j2.fileName" value="${sys:app.log4j2.fileName:-default}.json" />
-        <Property name="log4j2.filePattern"
-            value="${sys:app.log4j2.filePattern:-default}-%d{yyyy-MM-dd}-%i.json" />
+        <Property name="log4j2.basePath" value="${sys:app.log4j2.basePath:-.}" />
+        <Property name="log4j2.filePrefix" value="${sys:app.log4j2.filePrefix:-default}" />
+        <Property name="log4j2.fileName" value="${log4j2.filePrefix}-${date:yyyy-MM-dd-HH-mm-ssXX}.log.json" />
+        <Property name="log4j2.filePattern" value="${log4j2.filePrefix}-%d{yyyy-MM-dd-HH-mm-ssXX}-%i.log.json" />
     </Properties>
     <Appenders>
         <RollingFile name="RollingFile" fileName="logs/app.log"
@@ -16,16 +16,18 @@
                 <Delete basePath="logs">
                     <IfFileName regex="app-\d{4}-\d{2}-\d{2}\-\d+.log\.gz" />
                     <IfLastModified age="P3D" />
+                    <SortByModificationTime />
                 </Delete>
             </DefaultRolloverStrategy>
             <Policies>
                 <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="500 KB" />
                 <TimeBasedTriggeringPolicy />
             </Policies>
         </RollingFile>
         <RollingFile name="ConfiguredRollingFile"
-            fileName="${log4j2.basePath:-.}/${log4j2.fileName}"
-            filePattern="${log4j2.basePath:-.}/${log4j2.filePattern}">
+            fileName="${log4j2.basePath}/${log4j2.fileName}"
+            filePattern="${log4j2.basePath}/${log4j2.filePattern}">
             <Filters>
                 <!-- ScriptFilter shall block all events from being written, if no configuration is given -->
                 <ScriptFilter onMatch="ACCEPT" onMismatch="DENY">
@@ -51,14 +53,11 @@
             &quot;stackTrace&quot;: { &quot;stringified&quot;: true } }}" />
             <DefaultRolloverStrategy>
                 <Delete basePath="${log4j2.basePath}">
-                    <IfFileName regex="${log4j2.fileName}-\d{4}-\d{2}-\d{2}\-\d+.log\.json" />
+                    <IfFileName regex="${log4j2.filePrefix}-\d{4}-\d{2}-\d{2}[+-]?\d*\.log\.json" />
                     <IfLastModified age="P3D" />
                 </Delete>
             </DefaultRolloverStrategy>
-            <Policies>
-                <OnStartupTriggeringPolicy />
-                <TimeBasedTriggeringPolicy />
-            </Policies>
+            <OnStartupTriggeringPolicy />
         </RollingFile>
     </Appenders>
 

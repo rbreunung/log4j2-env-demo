@@ -79,7 +79,7 @@
                     </environmentVariables>
                     <systemPropertyVariables>
                         <app.log4j2.basePath>configuredLogs</app.log4j2.basePath>
-                        <app.log4j2.fileName>configuredName</app.log4j2.fileName>
+                        <app.log4j2.filePrefix>configuredName</app.log4j2.filePrefix>
                         <foo-sys>bar</foo-sys>
                     </systemPropertyVariables>
                 </configuration>
