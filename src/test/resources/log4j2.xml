@@ -11,13 +11,20 @@
             value="${log4j2.filePrefix}-%d{yyyy-MM-dd-HH-mm-ssXX}-%i.log.json" />
     </Properties>
     <Appenders>
+        <!-- default write requires no name - better to leave it -->
         <RollingFile name="RollingFile" fileName="logs/app.log"
             filePattern="logs/app-%d{yyyy-MM-dd}-%i.log.gz">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
-            <DefaultRolloverStrategy>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36}:%L - %msg%n" />
+            <!-- defaults to max=7 if not given-->
+            <DefaultRolloverStrategy max="50">
                 <Delete basePath="logs">
                     <IfFileName regex="app-\d{4}-\d{2}-\d{2}\-\d+.log\.gz" />
-                    <IfLastModified age="P3D" />
+                    <!-- defaults to and for the condition -->
+                    <IfAny>
+                        <IfLastModified age="P3M" />
+                        <!-- not including current log file -->
+                        <IfAccumulatedFileSize exceeds="200kb" />
+                    </IfAny>
                     <SortByModificationTime />
                 </Delete>
             </DefaultRolloverStrategy>
@@ -27,12 +34,17 @@
                 <TimeBasedTriggeringPolicy />
             </Policies>
         </RollingFile>
-        <RollingFile name="DirectWrite" filePattern="direct/app-%d{yyyy-MM-dd}-%i.log.gz">
+        <!-- direct write requires no name - better to leave it -->
+        <RollingFile name="DirectWrite" createOnDemand="true"
+            filePattern="direct/app-%d{yyyy-MM-dd}-%i.log.gz">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
             <DirectWriteRolloverStrategy>
                 <Delete basePath="direct">
                     <IfFileName regex="app-\d{4}-\d{2}-\d{2}\-\d+.log\.gz" />
-                    <IfLastModified age="P3D" />
+                    <IfAny>
+                        <IfLastModified age="P3M" />
+                        <IfAccumulatedFileSize exceeds="200kb" />
+                    </IfAny>
                     <SortByModificationTime />
                 </Delete>
             </DirectWriteRolloverStrategy>
@@ -72,7 +84,7 @@
             <DefaultRolloverStrategy>
                 <Delete basePath="${log4j2.basePath}">
                     <IfFileName regex="${log4j2.filePrefix}-\d{4}-\d{2}-\d{2}[+-]?\d*\.log\.json" />
-                    <IfLastModified age="P3D" />
+                    <IfLastModified age="P3M" />
                 </Delete>
             </DefaultRolloverStrategy>
             <OnStartupTriggeringPolicy />
